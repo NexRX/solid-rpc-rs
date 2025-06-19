@@ -1,10 +1,17 @@
 [package]
-name = "RustStack"
+name = "solid-rpc-rs"
 version = "0.1.0"
 edition = "2024"
+default-run = "solid-rpc-rs"
+autobins = false
+
+[[bin]]
+name = "solid-rpc-rs"
+path = "src-backend/main.rs"
 
 [dependencies]
 qubit = "0.10.1"
+tower-http = { version = "0.6.6", features = ["cors"] } # dev dep only
 
 ts-rs = "10.1.0"
 serde = { version = "1.0", features = ["derive"] }
@@ -13,3 +20,5 @@ futures = "0.3.31"
 tokio = { version = "1.44", features = ["full"] }
 axum = "0.8"
 hyper = { version = "1.6", features = ["server"] }
+rust-embed = "8.7.2"
+axum-embed = "0.1.0"
