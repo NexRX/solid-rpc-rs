@@ -7,7 +7,7 @@ import styles from './App.module.css';
 import { http, build_client } from "@qubit-rs/client";
 import type { QubitServer } from "../bindings";
 
-const api = build_client<QubitServer>(http("http://localhost:9944/rpc"));
+const api = build_client<QubitServer>(http("http://localhost:8080/rpc")); // TODO: load from env and set from RUST if possible at rs runtime
 
 const App: Component = () => {
   const [message] = createResource(api.hello_world.query);

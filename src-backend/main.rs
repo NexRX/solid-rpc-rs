@@ -1,69 +1,34 @@
-use std::net::SocketAddr;
+mod config;
+mod routes;
 
-use axum_embed::{FallbackBehavior, ServeEmbed};
-use qubit::{Router, handler};
-use rust_embed::RustEmbed;
+use confique::Config;
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use std::{error::Error, net::SocketAddr};
 use tokio::net::TcpListener;
-use tower_http::cors::CorsLayer;
+use tracing::info;
+use crate::config::Conf;
 
-#[handler(query)]
-async fn hello_world() -> String {
-    "Hello, world!".to_string()
-}
-
-const BINDINGS_DIR: &str = "./bindings";
-
-#[derive(RustEmbed, Clone)]
-#[folder = "dist/"]
-struct Spa;
+pub type Result<T = (), E = Box<dyn Error>> = std::result::Result<T, E>;
 
 #[tokio::main]
-async fn main() {
-    // Construct the qubit router
-    let router = router();
+async fn main() -> Result {
+    tracing_subscriber::registry()
+        .with(tracing_subscriber::fmt::layer())
+        .init();
+    
+    let config = Conf::builder().env().load()?;
 
-    // Save the type
-    router.write_bindings_to_dir(BINDINGS_DIR);
-    println!("Generated Bindings: {BINDINGS_DIR}");
+    let (router, qubit_handler) = routes::build(&config)?;
 
-    // Spa
-    let spa_service = ServeEmbed::<Spa>::with_parameters(
-        Some("/index.html".to_string()),
-        FallbackBehavior::Ok,
-        Some("/index.html".to_string()),
-    );
-
-    // Create service and handle
-    let (qubit_service, qubit_handle) = router.to_service(());
-
-    // Nest into an Axum rouer
-    let axum_router = axum::Router::<()>::new()
-        .nest_service("/rpc", qubit_service)
-        .fallback_service(spa_service) // Improvement, if /asset folder, then 404 if resource not found with no body
-        .layer(CorsLayer::permissive()); // Improvement, remove on release builds
-
-    // Start a Hyper server
-    println!("Listening at 127.0.0.1:9944");
+    info!("Starting web server on {}:{}", &config.host, &config.port);
     axum::serve(
-        TcpListener::bind(&SocketAddr::from(([127, 0, 0, 1], 9944)))
+        TcpListener::bind(&SocketAddr::from((config.host, config.port)))
             .await
             .unwrap(),
-        axum_router,
+        router,
     )
-    .await
-    .unwrap();
+    .await?;
 
-    // Shutdown Qubit
-    qubit_handle.stop().unwrap();
-}
-
-fn router() -> qubit::Router<()> {
-    Router::new().handler(hello_world)
-}
-
-#[cfg(test)] // Allows
-#[test]
-fn generate_bindings() {
-    router().write_bindings_to_dir(BINDINGS_DIR);
-    println!("Generated Bindings: {BINDINGS_DIR}");
+    qubit_handler.stop()?;
+    Ok(())
 }

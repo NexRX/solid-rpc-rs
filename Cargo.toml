@@ -10,15 +10,28 @@ name = "solid-rpc-rs"
 path = "src-backend/main.rs"
 
 [dependencies]
-qubit = "0.10.1"
-tower-http = { version = "0.6.6", features = ["cors"] } # dev dep only
 
+# RPC + Typesafety
+qubit = "0.10.1"
 ts-rs = "10.1.0"
 serde = { version = "1.0", features = ["derive"] }
 futures = "0.3.31"
 
+# Web Server
 tokio = { version = "1.44", features = ["full"] }
 axum = "0.8"
 hyper = { version = "1.6", features = ["server"] }
-rust-embed = "8.7.2"
+tower-http = { version = "0.6.6", features = ["cors", "trace"] }
+
+# Embedding Spa
 axum-embed = "0.1.0"
+rust-embed = "8.7.2"
+
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = "0.3"
+
+
+# Misc / Configuration
+confique = "0.3.0"
