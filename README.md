@@ -49,6 +49,16 @@
      ```
 
 ## Build for production
+Once you've got started, you can depend on `cargo build` to build the front end for you, it will detect your js package manager with prioity order of:
+
+1. pnpm
+2. bun
+3. deno
+4. yarn
+5. npm
+
+You can change this order in `build.rs > js_package_manager()` as you like.
+In regular (debug) builds, it will re-use existing frontend builds, but when you build for release it will always rebuild your frontend to have the latest version.
 
 1. **Compile**:
 
