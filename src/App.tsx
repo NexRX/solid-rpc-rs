@@ -1,13 +1,11 @@
 import { createResource, Suspense, type Component } from 'solid-js';
-
 import logo from './logo.svg';
 import styles from './App.module.css';
-
-// Import transport from client, and generated server type
 import { http, build_client } from "@qubit-rs/client";
 import type { QubitServer } from "../bindings";
 
-const api = build_client<QubitServer>(http("http://localhost:8080/rpc")); // TODO: load from env and set from RUST if possible at rs runtime
+const rpcUrl = import.meta.env.DEV ? "http://localhost:8080/rpc" : window.location.origin + "/rpc";
+const api = build_client<QubitServer>(http(rpcUrl));
 
 const App: Component = () => {
   const [message] = createResource(api.hello_world.query);
