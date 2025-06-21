@@ -2,7 +2,7 @@
 
 > **Build blazing-fast, type-safe full-stack apps with SolidJS & Rust!**
 
-🚀 **solid-rpc-rs** is a template repository designed to seamlessly combine [SolidJS](https://www.solidjs.com/) and [Rust](https://www.rust-lang.org/) using RPC (Remote Procedure Call) for full-stack web development. This project provides a modern, efficient, and type-safe foundation for building reactive web apps with a Rust-powered backend and a SolidJS frontend. There is **one** source of truth for whats callable on your server and thats your <code>code</code>, no `.proto` files needed!
+🚀 **solid-rpc-rs** is a template repository designed to seamlessly combine [SolidJS](https://www.solidjs.com/) and [Rust](https://www.rust-lang.org/) using RPC (Remote Procedure Call) for full-stack web development. This project provides a modern, efficient, and type-safe foundation for building reactive web apps with a Rust-powered backend and a SolidJS frontend. There is **one** source of truth for whats callable on your server and thats your `code`, no `.proto` files needed!
 
 ---
 
@@ -30,25 +30,32 @@
 2. **Install dependencies:**
 
    - For the frontend:
+
      ```bash
      pnpm install # or npm, yarn, bun, etc
      ```
+
    - For the backend:
+
      ```bash
      cargo build
      ```
 
 3. **Run the development servers:**
    - Start the backend:
+
      ```bash
      cargo run
      ```
+
    - Start the frontend:
+
      ```bash
      pnpm run dev # or npm, yarn, bun, etc
      ```
 
 ## Build for production
+
 Once you've got started, you can depend on `cargo build` to build the front end for you, it will detect your js package manager with prioity order of:
 
 1. pnpm
@@ -62,18 +69,18 @@ In regular (debug) builds, it will re-use existing frontend builds, but when you
 
 1. **Compile**:
 
-```rust
-cargo build --release
-```
+    ```rust
+    cargo build --release
+    ```
 
-Now copy solid `target/release/solid-rpc-rs` (.exe on windows) to your server
+    Now copy solid `target/release/solid-rpc-rs` (.exe on windows) to your server
 
 2. **Run**:
 
-```bash
-chmod +x ./solid-rpc-rs # linux only
-./solid-rpc-rs # .exe on windows
-```
+    ```bash
+    chmod +x ./solid-rpc-rs # linux only
+    ./solid-rpc-rs # .exe on windows
+    ```
 
 ---
 
